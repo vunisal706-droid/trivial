@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capitrivial - CEIP Capitulaciones</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Pantalla de inicio */
+        #welcome-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .title {
+            font-size: 4em;
+            color: white;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .capitulin {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background: #FFD700;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .capitulin-eyes {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        .eye {
+            width: 35px;
+            height: 35px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #333;
+        }
+
+        .pupil {
+            width: 15px;
+            height: 15px;
+            background: black;
+            border-radius: 50%;
+        }
+
+        .capitulin-mouth {
+            position: absolute;
+            bottom: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 35px;
+            border: 4px solid #333;
+            border-top: none;
+            border-radius: 0 0 70px 70px;
+        }
+
+        .selection-box {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 600px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .selection-box h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .cycle-btn, .team-btn {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        #start-game-btn {
+            display: none;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            font-size: 1.5em;
+            padding: 20px 50px;
+            margin-top: 20px;
+        }
+
+        /* Pantalla de juego */
+        #game-screen {
+            display: none;
+        }
+
+        .game-header {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .teams-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .team {
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 4px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .team.active {
+            border-color: #FFD700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+            transform: scale(1.05);
+        }
+
+        .team-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .team1 { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); color: white; }
+        .team2 { background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; }
+        .team3 { background: linear-gradient(135deg, #f7b731 0%, #f5a623 100%); color: white; }
+        .team4 { background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%); color: white; }
+
+        .quesitos {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .quesito {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid white;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .quesito.earned {
+            background: white;
+            animation: pop 0.3s ease;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .quesito.blue { border-color: #2196F3; }
+        .quesito.blue.earned { background: #2196F3; }
+        
+        .quesito.green { border-color: #4CAF50; }
+        .quesito.green.earned { background: #4CAF50; }
+        
+        .quesito.yellow { border-color: #FFEB3B; }
+        .quesito.yellow.earned { background: #FFEB3B; }
+        
+        .quesito.red { border-color: #F44336; }
+        .quesito.red.earned { background: #F44336; }
+        
+        .quesito.purple { border-color: #9C27B0; }
+        .quesito.purple.earned { background: #9C27B0; }
+        
+        .quesito.orange { border-color: #FF9800; }
+        .quesito.orange.earned { background: #FF9800; }
+
+        .game-board {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .current-turn {
+            text-align: center;
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        #waiting-message {
+            text-align: center;
+        }
+
+        .dice {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border: 4px solid #667eea;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            margin: 30px auto;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .dice:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .dice.rolling {
+            animation: roll 0.1s infinite;
+        }
+
+        @keyframes roll {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(90deg); }
+            50% { transform: rotate(180deg); }
+            75% { transform: rotate(270deg); }
+        }
+
+        #question-box {
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        #question-box.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .category-title {
+            text-align: center;
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+
+        .question-text {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .answer-btn {
+            padding: 20px;
+            font-size: 1.2em;
+            border: 3px solid #667eea;
+            background: white;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .answer-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .answer-btn.correct {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .answer-btn.incorrect {
+            background: #F44336;
+            color: white;
+            border-color: #F44336;
+        }
+
+        .feedback {
+            text-align: center;
+            font-size: 1.3em;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .feedback.correct {
+            background: #C8E6C9;
+            color: #2E7D32;
+        }
+
+        .feedback.incorrect {
+            background: #FFCDD2;
+            color: #C62828;
+        }
+
+        #next-turn-btn {
+            display: none;
+            margin: 20px auto;
+        }
+
+        #next-turn-btn.show {
+            display: block;
+        }
+
+        /* Pantalla de victoria */
+        #victory-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .victory-title {
+            font-size: 4em;
+            color: white;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            animation: bounce 2s infinite;
+        }
+
+        .winner-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px auto;
+            max-width: 600px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .winner-box h2 {
+            font-size: 3em;
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #FFD700;
+            position: absolute;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5em;
+            }
+            
+            .answers {
+                grid-template-columns: 1fr;
+            }
+            
+            .team {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Pantalla de bienvenida -->
+        <div id="welcome-screen">
+            <h1 class="title">🎯 CAPITRIVIAL 🎯</h1>
+            
+            <div class="capitulin">
+                <div class="capitulin-eyes">
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                </div>
+                <div class="capitulin-mouth"></div>
+            </div>
+
+            <div class="selection-box">
+                <h2>🎓 Selecciona el Ciclo</h2>
+                <div class="btn-group">
+                    <button class="btn cycle-btn" onclick="selectCycle('primero')">1º Ciclo<br>(1º-2º)</button>
+                    <button class="btn cycle-btn" onclick="selectCycle('segundo')">2º Ciclo<br>(3º-4º)</button>
+                    <button class="btn cycle-btn" onclick="selectCycle('tercero')">3º Ciclo<br>(5º-6º)</button>
+                </div>
+            </div>
+
+            <div class="selection-box">
+                <h2>👥 Número de Equipos</h2>
+                <div class="btn-group">
+                    <button class="btn team-btn" onclick="selectTeams(2)">2</button>
+                    <button class="btn team-btn" onclick="selectTeams(3)">3</button>
+                    <button class="btn team-btn" onclick="selectTeams(4)">4</button>
+                </div>
+            </div>
+
+            <button id="start-game-btn" class="btn" onclick="startGame()">¡EMPEZAR A JUGAR!</button>
+        </div>
+
+        <!-- Pantalla de juego -->
+        <div id="game-screen">
+            <div class="game-header">
+                <div class="teams-container" id="teams-container"></div>
+            </div>
+
+            <div class="game-board">
+                <div class="current-turn">
+                    Turno de: <span id="current-team-name">Equipo 1</span>
+                </div>
+
+                <div id="waiting-message">
+                    <p style="font-size: 1.5em; margin-bottom: 20px;">¡Lanza el dado!</p>
+                    <div class="dice" id="dice" onclick="rollDice()">🎲</div>
+                </div>
+
+                <div id="question-box">
+                    <div class="category-title" id="category-title"></div>
+                    <div class="question-text" id="question-text"></div>
+                    <div class="answers" id="answers"></div>
+                    <div class="feedback" id="feedback"></div>
+                    <button id="next-turn-btn" class="btn" onclick="nextTurn()">Siguiente Turno</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla de victoria -->
+        <div id="victory-screen">
+            <h1 class="victory-title">🏆 ¡VICTORIA! 🏆</h1>
+            
+            <div class="capitulin">
+                <div class="capitulin-eyes">
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                </div>
+                <div class="capitulin-mouth"></div>
+            </div>
+
+            <div class="winner-box">
+                <h2 id="winner-team">Equipo 1</h2>
+                <p style="font-size: 1.5em; margin: 20px 0;">¡Ha ganado el juego!</p>
+                <button class="btn" onclick="location.reload()">Jugar de nuevo</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="questions.js"></script>
+    <script>
+        let selectedCycle = null;
+        let numTeams = 0;
+        let teams = [];
+        let currentTeam = 0;
+        let currentCategory = null;
+        let currentQuestion = null;
+        let usedQuestions = {
+            lengua: [],
+            matematicas: [],
+            naturales: [],
+            sociales: [],
+            ingles: [],
+            cultura: []
+        };
+
+        const categoryMap = {
+            1: {name: 'lengua', color: 'blue', emoji: '📚', fullName: 'Lengua'},
+            2: {name: 'matematicas', color: 'green', emoji: '🔢', fullName: 'Matemáticas'},
+            3: {name: 'naturales', color: 'yellow', emoji: '🔬', fullName: 'Ciencias Naturales'},
+            4: {name: 'sociales', color: 'red', emoji: '🌍', fullName: 'Ciencias Sociales'},
+            5: {name: 'ingles', color: 'purple', emoji: '🇬🇧', fullName: 'Inglés'},
+            6: {name: 'cultura', color: 'orange', emoji: '🎨', fullName: 'Arte y Cultura'}
+        };
+
+        function selectCycle(cycle) {
+            selectedCycle = cycle;
+            document.querySelectorAll('.cycle-btn').forEach(btn => {
+                btn.style.opacity = '0.5';
+            });
+            event.target.style.opacity = '1';
+            checkStartButton();
+        }
+
+        function selectTeams(num) {
+            numTeams = num;
+            document.querySelectorAll('.team-btn').forEach(btn => {
+                btn.style.opacity = '0.5';
+            });
+            event.target.style.opacity = '1';
+            checkStartButton();
+        }
+
+        function checkStartButton() {
+            if (selectedCycle && numTeams > 0) {
+                document.getElementById('start-game-btn').style.display = 'inline-block';
+            }
+        }
+
+        function startGame() {
+            if (typeof questionBank === 'undefined') {
+                alert('ERROR: No se han cargado las preguntas. Asegúrate de que el archivo questions.js está en la misma carpeta.');
+                return;
+            }
+
+            teams = [];
+            for (let i = 1; i <= numTeams; i++) {
+                teams.push({
+                    name: `Equipo ${i}`,
+                    quesitos: {
+                        lengua: false,
+                        matematicas: false,
+                        naturales: false,
+                        sociales: false,
+                        ingles: false,
+                        cultura: false
+                    }
+                });
+            }
+
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+
+            renderTeams();
+            updateCurrentTeam();
+        }
+
+        function renderTeams() {
+            const container = document.getElementById('teams-container');
+            container.innerHTML = '';
+
+            teams.forEach((team, index) => {
+                const teamDiv = document.createElement('div');
+                teamDiv.className = `team team${index + 1}`;
+                teamDiv.id = `team-${index}`;
+                
+                const quesitosHTML = Object.keys(team.quesitos).map(cat => {
+                    const color = Object.values(categoryMap).find(c => c.name === cat).color;
+                    const earned = team.quesitos[cat] ? 'earned' : '';
+                    return `<div class="quesito ${color} ${earned}"></div>`;
+                }).join('');
+
+                teamDiv.innerHTML = `
+                    <div class="team-name">${team.name}</div>
+                    <div class="quesitos">${quesitosHTML}</div>
+                `;
+                
+                container.appendChild(teamDiv);
+            });
+        }
+
+        function updateCurrentTeam() {
+            document.querySelectorAll('.team').forEach(t => t.classList.remove('active'));
+            document.getElementById(`team-${currentTeam}`).classList.add('active');
+            document.getElementById('current-team-name').textContent = teams[currentTeam].name;
+        }
+
+        function rollDice() {
+            const dice = document.getElementById('dice');
+            dice.classList.add('rolling');
+            
+            let rolls = 0;
+            const rollInterval = setInterval(() => {
+                dice.textContent = Math.floor(Math.random() * 6) + 1;
+                rolls++;
+                if (rolls > 10) {
+                    clearInterval(rollInterval);
+                    const finalNumber = Math.floor(Math.random() * 6) + 1;
+                    dice.textContent = finalNumber;
+                    dice.classList.remove('rolling');
+                    showQuestion(finalNumber);
+                }
+            }, 100);
+        }
+
+        function showQuestion(categoryNumber) {
+            const category = categoryMap[categoryNumber];
+            currentCategory = category.name;
+
+            document.getElementById('waiting-message').style.display = 'none';
+            document.getElementById('question-box').classList.add('active');
+
+            const availableQuestions = questionBank[selectedCycle][currentCategory].filter((q, index) => 
+                !usedQuestions[currentCategory].includes(index)
+            );
+
+            if (availableQuestions.length === 0) {
+                usedQuestions[currentCategory] = [];
+            }
+
+            const questions = availableQuestions.length > 0 ? availableQuestions : questionBank[selectedCycle][currentCategory];
+            const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+            const actualIndex = questionBank[selectedCycle][currentCategory].indexOf(randomQuestion);
+            
+            currentQuestion = randomQuestion;
+            usedQuestions[currentCategory].push(actualIndex);
+
+            document.getElementById('category-title').innerHTML = `${category.emoji} ${category.fullName}`;
+            document.getElementById('question-text').textContent = currentQuestion.q;
+
+            const answersContainer = document.getElementById('answers');
+            answersContainer.innerHTML = '';
+            
+            currentQuestion.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = answer;
+                btn.onclick = () => checkAnswer(index);
+                answersContainer.appendChild(btn);
+            });
+
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('next-turn-btn').classList.remove('show');
+        }
+
+        function checkAnswer(selectedIndex) {
+            const answerButtons = document.querySelectorAll('.answer-btn');
+            const feedback = document.getElementById('feedback');
+            
+            answerButtons.forEach(btn => btn.style.pointerEvents = 'none');
+
+            if (selectedIndex === currentQuestion.correct) {
+                answerButtons[selectedIndex].classList.add('correct');
+                feedback.textContent = '¡Correcto! 🎉 ¡Has ganado un quesito!';
+                feedback.className = 'feedback correct show';
+                
+                teams[currentTeam].quesitos[currentCategory] = true;
+                renderTeams();
+                updateCurrentTeam();
+
+                if (checkVictory()) {
+                    setTimeout(showVictory, 2000);
+                    return;
+                }
+            } else {
+                answerButtons[selectedIndex].classList.add('incorrect');
+                answerButtons[currentQuestion.correct].classList.add('correct');
+                feedback.textContent = '❌ Incorrecto. La respuesta correcta era: ' + currentQuestion.answers[currentQuestion.correct];
+                feedback.className = 'feedback incorrect show';
+            }
+
+            document.getElementById('next-turn-btn').classList.add('show');
+        }
+
+        function checkVictory() {
+            const teamQuesitos = teams[currentTeam].quesitos;
+            return Object.values(teamQuesitos).every(q => q === true);
+        }
+
+        function showVictory() {
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('victory-screen').style.display = 'block';
+            document.getElementById('winner-team').textContent = teams[currentTeam].name;
+        }
+
+        function nextTurn() {
+            currentTeam = (currentTeam + 1) % numTeams;
+            updateCurrentTeam();
+            
+            document.getElementById('question-box').classList.remove('active');
+            document.getElementById('waiting-message').style.display = 'block';
+            document.getElementById('dice').textContent = '🎲';
+        }
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+    </script>
+</body>
+</html>
