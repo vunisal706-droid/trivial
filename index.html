@@ -452,6 +452,53 @@
             }
         }
 
+        /* Leyenda de categorías */
+        .category-legend {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 15px 20px;
+            margin-top: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .legend-title {
+            text-align: center;
+            font-size: 1.1em;
+            color: #667eea;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95em;
+            color: #333;
+        }
+
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+
+        .legend-color.blue { background: #2196F3; }
+        .legend-color.green { background: #4CAF50; }
+        .legend-color.yellow { background: #FFEB3B; }
+        .legend-color.red { background: #F44336; }
+        .legend-color.purple { background: #9C27B0; }
+        .legend-color.orange { background: #FF9800; }
+
         @media (max-width: 768px) {
             .title {
                 font-size: 2.5em;
@@ -463,6 +510,19 @@
             
             .team {
                 min-width: 100%;
+            }
+
+            .legend-items {
+                gap: 8px 15px;
+            }
+
+            .legend-item {
+                font-size: 0.85em;
+            }
+
+            .legend-color {
+                width: 20px;
+                height: 20px;
             }
         }
     </style>
@@ -510,6 +570,19 @@
         <div id="game-screen">
             <div class="game-header">
                 <div class="teams-container" id="teams-container"></div>
+                
+                <!-- Leyenda de categorías -->
+                <div class="category-legend">
+                    <div class="legend-title">🎯 Categorías de los Quesitos</div>
+                    <div class="legend-items">
+                        <div class="legend-item"><div class="legend-color blue"></div>📚 Lengua</div>
+                        <div class="legend-item"><div class="legend-color green"></div>🔢 Matemáticas</div>
+                        <div class="legend-item"><div class="legend-color yellow"></div>🔬 C. Naturales</div>
+                        <div class="legend-item"><div class="legend-color red"></div>🌍 C. Sociales</div>
+                        <div class="legend-item"><div class="legend-color purple"></div>🇬🇧 Inglés</div>
+                        <div class="legend-item"><div class="legend-color orange"></div>🎨 Arte y Cultura</div>
+                    </div>
+                </div>
             </div>
 
             <div class="game-board">
